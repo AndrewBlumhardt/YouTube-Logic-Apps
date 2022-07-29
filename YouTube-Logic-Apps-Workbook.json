@@ -88,7 +88,7 @@
             "name": "Help",
             "label": "Show Help",
             "type": 10,
-            "description": "This will show some help information to help you understand the page you are on",
+            "description": "This will show some help information to help you understand the workbook",
             "isRequired": true,
             "typeSettings": {
               "additionalResourceOptions": []
