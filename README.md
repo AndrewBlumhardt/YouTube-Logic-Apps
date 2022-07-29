@@ -35,5 +35,5 @@ Note that most of the video data is publicly available with a legitimate API key
 [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2Fmain%2FGetYouTubePlaylistVideoIDs%2Fazuredeploy.json)
 
 # GetYouTubeVideoStats
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAndrewBlumhardt%2Fmaster%2FYouTube-Logic-Apps%2FGetYouTubeVideoStats.json)
-[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAndrewBlumhardt%2Fmaster%2FYouTube-Logic-Apps%2FGetYouTubeVideoStats.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2Fmain%2FGetYouTubeVideoStats%2Fazuredeploy.json)
+[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2Fmain%2FGetYouTubeVideoStats%2Fazuredeploy.json)
