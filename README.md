@@ -12,17 +12,17 @@ Setup:
 
 1.	You first need a YouTube account (Google Account).
 2.	Add any videos that you want to track to a playlist.
-3.	Get an API Key: YouTube Data API Overview  |  Google Developers
+3.	Get an API Key: [YouTube Data API Overview  |  Google Developers](https://developers.google.com/youtube/v3/getting-started)
 *	Create a project in the Google Developers Console
 *	Create a new API key
 *	Restrict the key to “YouTube Data API v3” (optional)
 4.	Deploy the YouTube logic apps (both require the API key and access to a Log Analytics Workspace):
-*	GetYouTubePlaylistVideoIDs:
-**	This collects all the videos from your playlists. 
-**	Depending on your upload frequency, consider scheduling this to run monthly.
-*	GetYouTubeVideoStats:
-**	This collects the video metrics and comments.
-**	Recommended to run on a 24-hour schedule.
+  GetYouTubePlaylistVideoIDs:
+*	This collects all the videos from your playlists. 
+*	Depending on your upload frequency, consider scheduling this to run monthly.
+	GetYouTubeVideoStats:
+*	This collects the video metrics and comments.
+*	Recommended to run on a 24-hour schedule.
 5.	Deploy the “YouTube Video Review” workbook:
 *	This gets you stated with a basic set of reporting views.
 
