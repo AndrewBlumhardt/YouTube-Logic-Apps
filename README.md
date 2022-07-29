@@ -28,4 +28,5 @@ Note that most of the video data is publicly available with a legitimate API key
 *	Recommended to run on a 24-hour schedule.
 5.	Deploy the “YouTube Video Review” workbook:
 *	This gets you stated with a basic set of reporting views.
+6. Run each playbook manually to verify successful setup and to initialize the tables. Start with the playlist app. Wait 10-15 minutes for the tables to initialize.
 
