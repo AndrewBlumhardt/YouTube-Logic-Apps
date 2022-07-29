@@ -1,0 +1,427 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "9c625f35-a9de-412d-9a38-679d3212e254",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "value": "",
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "additionalResourceOptions": []
+            }
+          },
+          {
+            "id": "62e0b91a-2393-4273-b882-561ee9bcebb6",
+            "version": "KqlParameterItem/1.0",
+            "name": "Channel",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "YouTubePlaylistDetails_CL\r\n| summarize arg_max(TimeGenerated, *) by channelTitle_s\r\n| project Channel=channelTitle_s\r\n| sort by Channel",
+            "value": [],
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "id": "d4256930-f458-4212-b57f-9f5bd06e760c",
+            "version": "KqlParameterItem/1.0",
+            "name": "Playlist",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "YouTubePlaylistDetails_CL\r\n| summarize arg_max(TimeGenerated, *) by playllistTitle_s\r\n| project PLaylist=playllistTitle_s\r\n| sort by PLaylist",
+            "value": [],
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "Source",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "YouTubeVideoStats_CL\r\n| summarize arg_max(TimeGenerated, *) by channelTitle_s\r\n| project Channel=channelTitle_s\r\n| sort by Channel",
+            "value": [],
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "id": "a6401f3c-98be-4d0a-a65b-ea6e9b5f23a4"
+          },
+          {
+            "id": "a38d4852-1998-4564-88d7-d6d8c7e34d1c",
+            "version": "KqlParameterItem/1.0",
+            "name": "Help",
+            "label": "Show Help",
+            "type": 10,
+            "description": "This will show some help information to help you understand the page you are on",
+            "isRequired": true,
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "jsonData": "[\r\n { \"value\": \"Yes\", \"label\": \"Yes\"},\r\n { \"value\": \"No\", \"label\": \"No\", \"selected\":true }\r\n]"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "YouTubePlaylistDetails_CL\r\n| project-rename id_s=videoid_s\r\n| join (YouTubeVideoStats_CL) on id_s\r\n| summarize arg_max(TimeGenerated, *) by title_s\r\n| where channelTitle_s in (dynamic([{Channel}]))\r\n| where channelTitle_s1 in (dynamic([{Source}]))\r\n| where playllistTitle_s in (dynamic([{Playlist}]))\r\n| extend viewsx = tolong(viewCount_d)\r\n| summarize sum(viewsx)\r\n",
+        "size": 4,
+        "title": "Total Views",
+        "color": "red",
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {},
+          "leftContent": {
+            "columnMatch": "sum_viewsx",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "showBorder": false
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "customWidth": "18",
+      "name": "query - 2 - Copy",
+      "styleSettings": {
+        "maxWidth": "100%"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "YouTubePlaylistDetails_CL\r\n| project-rename id_s=videoid_s\r\n| join (YouTubeVideoStats_CL) on id_s\r\n| where channelTitle_s in (dynamic([{Channel}]))\r\n| where channelTitle_s1 in (dynamic([{Source}]))\r\n| where playllistTitle_s in (dynamic([{Playlist}]))\r\n| summarize arg_max(TimeGenerated, *) by title_s\r\n| extend viewsx = tolong(likeCount_d)\r\n| summarize sum(viewsx)",
+        "size": 4,
+        "title": "Total Likes",
+        "color": "red",
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {},
+          "leftContent": {
+            "columnMatch": "sum_viewsx",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "showBorder": false
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "customWidth": "18",
+      "name": "query - 2 - Copy - Copy",
+      "styleSettings": {
+        "maxWidth": "100%"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "YouTubePlaylistDetails_CL\r\n| project-rename id_s=videoid_s\r\n| join (YouTubeVideoStats_CL) on id_s\r\n| summarize arg_max(TimeGenerated, *) by title_s\r\n| where channelTitle_s in (dynamic([{Channel}]))\r\n| where channelTitle_s1 in (dynamic([{Source}]))\r\n| where playllistTitle_s in (dynamic([{Playlist}]))\r\n| extend viewsx = tolong(commentCount_d)\r\n| summarize sum(viewsx)",
+        "size": 4,
+        "title": "Total Comments",
+        "color": "red",
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "tiles",
+        "tileSettings": {
+          "titleContent": {},
+          "leftContent": {
+            "columnMatch": "sum_viewsx",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "showBorder": false
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "customWidth": "18",
+      "name": "query - 2 - Copy - Copy",
+      "styleSettings": {
+        "maxWidth": "100%"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "YouTubePlaylistDetails_CL\r\n| project-rename id_s=videoid_s\r\n| join (YouTubeVideoStats_CL) on id_s\r\n| summarize arg_max(TimeGenerated, *) by title_s\r\n| where channelTitle_s in (dynamic([{Channel}]))\r\n| where channelTitle_s1 in (dynamic([{Source}]))\r\n| where playllistTitle_s in (dynamic([{Playlist}]))\r\n| sort by viewCount_d\r\n| top 10 by viewCount_d\r\n| project Video=title_s, Views=viewCount_d",
+        "size": 4,
+        "title": "Top 10 Videos",
+        "color": "red",
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Views",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ]
+        },
+        "sortBy": [],
+        "tileSettings": {
+          "titleContent": {},
+          "leftContent": {
+            "columnMatch": "sum_viewsx",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "showBorder": false
+        },
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "customWidth": "45",
+      "name": "query - 2 - Copy - Copy - Copy",
+      "styleSettings": {
+        "maxWidth": "100%"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let past = YouTubeVideoStats_CL\r\n| where TimeGenerated > ago(25h)\r\n| summarize arg_min(TimeGenerated, *) by title_s\r\n| project viewCount_d, id_s;\r\nlet preset = YouTubeVideoStats_CL\r\n| where TimeGenerated > ago(25h)\r\n| summarize arg_max(TimeGenerated, *) by title_s;\r\npast\r\n| join (preset) on id_s\r\n| project-rename Present=viewCount_d1, Past=viewCount_d\r\n| extend NewViews = Present - Past\r\n| extend Last24= (NewViews/Past)*100\r\n| join (YouTubePlaylistDetails_CL) on $left.id_s == $right.videoid_s\r\n| extend Days = (datetime_diff('day', publishedAt_t, now()))*-1\r\n| extend DailyViews = Present/Days\r\n| summarize arg_max(TimeGenerated, *) by title_s\r\n| parse duration_s with * \"PT\" Minutes \"M\" Seconds \"S\" *\r\n| extend Duration = strcat(Minutes, \":\", Seconds)\r\n| where channelTitle_s1 in (dynamic([{Channel}]))\r\n| where channelTitle_s in (dynamic([{Source}]))\r\n| where playllistTitle_s in (dynamic([{Playlist}]))\r\n| project Published=publishedAt_t, Days, Title=title_s, Duration, VideoURL=VideoUrl_s, Views=Present, NewViews, DailyViews, Last24, Likes=likeCount_d, Comments=commentCount_d, ID=id_s, Channel=channelTitle_s1, PLaylist=playllistTitle_s, Source=channelTitle_s, Language=defaultLanguage_s, Licensed=licensedContent_s, Caption=caption_s, Tags=tags_s",
+        "size": 0,
+        "title": "Videos (Select to see comments)",
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "exportMultipleValues": true,
+        "exportedParameters": [
+          {
+            "fieldName": "ID",
+            "parameterName": "GETID",
+            "parameterType": 1
+          }
+        ],
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Published",
+              "formatter": 6,
+              "formatOptions": {
+                "customColumnWidthSetting": "15ch"
+              },
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              },
+              "dateFormat": {
+                "formatName": "shortDatePattern"
+              }
+            },
+            {
+              "columnMatch": "Days",
+              "formatter": 0,
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "VideoURL",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "30ch"
+              }
+            },
+            {
+              "columnMatch": "Views",
+              "formatter": 8,
+              "formatOptions": {
+                "palette": "blue",
+                "customColumnWidthSetting": "14ch"
+              },
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "NewViews",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "15ch"
+              },
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "DailyViews",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "15ch"
+              },
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal",
+                  "useGrouping": false
+                }
+              }
+            },
+            {
+              "columnMatch": "Last24",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "15ch"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "Likes",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "15ch"
+              }
+            }
+          ],
+          "sortBy": [
+            {
+              "itemKey": "$gen_heatmap_Views_5",
+              "sortOrder": 2
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_heatmap_Views_5",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "name": "query - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let Videos = dynamic([{GETID}]) ;\r\nYouTubeVideoComments_CL\r\n| summarize arg_min(TimeGenerated, *) by textDisplay_s\r\n| where videoID_s in (Videos)\r\n| project videoID_s, publishedAt_t, textDisplay_s, author_s, authorChannelUrl_s\r\n| sort by videoID_s, publishedAt_t\r\n",
+        "size": 0,
+        "title": "Comments",
+        "noDataMessage": "Select a video above to view comments",
+        "noDataMessageStyle": 3,
+        "timeContext": {
+          "durationMs": 86400000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "query - 6"
+    }
+  ],
+  "fallbackResourceIds": [
+    "/subscriptions/9b776454-bbf1-497e-93dc-10f62c020dd2/resourceGroups/CaliDemo/providers/Microsoft.OperationalInsights/workspaces/CaliDemo"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
