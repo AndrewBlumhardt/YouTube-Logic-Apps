@@ -31,8 +31,8 @@ Note that most of the video data is publicly available with a legitimate API key
 6. Run each playbook manually to verify successful setup and to initialize the tables. Start with the playlist app. Wait 10-15 minutes for the tables to initialize.
 
 # GetYouTubePlaylistVideoIDs
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2FGetYouTubePlaylistVideoIDs.json)
-[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAndrewBlumhardt%2Fmaster%2FYouTube-Logic-Apps%2FGetYouTubePlaylistVideoIDs.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2Fmain%2FGetYouTubePlaylistVideoIDs%2Fazuredeploy.json)
+[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAndrewBlumhardt%2FYouTube-Logic-Apps%2Fmain%2FGetYouTubePlaylistVideoIDs%2Fazuredeploy.json)
 
 # GetYouTubeVideoStats
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAndrewBlumhardt%2Fmaster%2FYouTube-Logic-Apps%2FGetYouTubeVideoStats.json)
