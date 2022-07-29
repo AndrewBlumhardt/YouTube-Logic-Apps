@@ -1,7 +1,7 @@
 # YouTube-Logic-Apps
 Monitor your YouTube videos using Logic Apps and Azure Monitor.
 
-![YouTube-Logic-Apps](./Images/workbook.jpg)
+![YouTube-Logic-Apps](./Images/screenshot.png)
 
 The following solution uses two Logic Apps to collect YouTube video metrics and comments by leveraging the YouTube API.
 
