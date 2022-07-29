@@ -564,10 +564,10 @@
                                 "method":  "post",
                                 "path":  "/queryData",
                                 "queries":  {
-                                    "resourcegroups":  "CaliDemo",
-                                    "resourcename":  "CaliDemo",
-                                    "resourcetype":  "Log Analytics Workspace",
-                                    "subscriptions":  "9b776454-bbf1-497e-93dc-10f62c020dd2",
+                                    "resourcegroups":  "",
+                                    "resourcename":  "",
+                                    "resourcetype":  "",
+                                    "subscriptions":  "",
                                     "timerange":  "Last 24 hours"
                                 }
                             }
@@ -581,7 +581,7 @@
                                     {
                                         "name":  "APIKEY",
                                         "type":  "string",
-                                        "value":  "AIzaSyD3aJeS-NBIWpzwotG-Nzm1MyStyVcf1PM"
+                                        "value":  ""
                                     }
                                 ]
                             }
