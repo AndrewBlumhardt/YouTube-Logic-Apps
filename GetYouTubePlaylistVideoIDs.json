@@ -1,0 +1,561 @@
+{
+    "$schema":  "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":  "1.0.0.0",
+    "metadata":  {
+        "title":  "",
+        "description":  "",
+        "prerequisites":  "",
+        "postDeployment":  [
+        ],
+        "prerequisitesDeployTemplateFile":  "",
+        "lastUpdateTime":  "",
+        "entities":  [
+        ],
+        "tags":  [
+        ],
+        "support":  {
+            "tier":  "community",
+            "armtemplate":  "Generated from https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Playbook-ARM-Template-Generator"
+        },
+        "author":  {
+            "name":  ""
+        }
+    },
+    "parameters":  {
+        "PlaybookName":  {
+            "defaultValue":  "GetYouTubePlaylistVideoIDs",
+            "type":  "string"
+        }
+    },
+    "variables":  {
+        "AzureloganalyticsdatacollectorConnectionName":  "[concat('Azureloganalyticsdatacollector-', parameters('PlaybookName'))]"
+    },
+    "resources":  [
+        {
+            "properties":  {
+                "provisioningState":  "Succeeded",
+                "state":  "Enabled",
+                "definition":  {
+                    "$schema":  "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion":  "1.0.0.0",
+                    "parameters":  {
+                        "$connections":  {
+                            "defaultValue":  {
+                            },
+                            "type":  "Object"
+                        }
+                    },
+                    "triggers":  {
+                        "Recurrence":  {
+                            "recurrence":  {
+                                "frequency":  "Day",
+                                "interval":  1
+                            },
+                            "evaluatedRecurrence":  {
+                                "frequency":  "Day",
+                                "interval":  1
+                            },
+                            "type":  "Recurrence"
+                        }
+                    },
+                    "actions":  {
+                        "For_each_Playlist":  {
+                            "foreach":  "@body('Parse_JSON')?['items']",
+                            "actions":  {
+                                "For_playlist_video":  {
+                                    "foreach":  "@body('Parse_JSON_2')?['items']",
+                                    "actions":  {
+                                        "Send_Data_to_YouTubePlaylistDetails_CL":  {
+                                            "runAfter":  {
+                                            },
+                                            "type":  "ApiConnection",
+                                            "inputs":  {
+                                                "body":  "{\n  \"etag\": \"@{body('Parse_JSON_2')?['etag']}\",\n  \"title\": \"@{items('For_playlist_video')?['snippet']?['title']}\",\n  \"videoid\": \"@{items('For_playlist_video')?['contentDetails']?['videoId']}\",\n  \"url\": \"@{items('For_playlist_video')?['snippet']?['thumbnails']?['default']?['url']}\",\n  \"publishedAt\": \"@{items('For_each_Playlist')?['snippet']?['publishedAt']}\",\n  \"playllistTitle\": \"@{items('For_each_Playlist')?['snippet']?['localized']?['title']}\",\n  \"playllistId\": \"@{items('For_playlist_video')?['snippet']?['playlistId']}\",\n  \"channelId\": \"@{items('For_playlist_video')?['snippet']?['channelId']}\",\n  \"channelTitle\": \"@{items('For_playlist_video')?['snippet']?['channelTitle']}\"\n}",
+                                                "headers":  {
+                                                    "Log-Type":  "YouTubePlaylistDetails"
+                                                },
+                                                "host":  {
+                                                    "connection":  {
+                                                        "name":  "@parameters('$connections')['azureloganalyticsdatacollector']['connectionId']"
+                                                    }
+                                                },
+                                                "method":  "post",
+                                                "path":  "/api/logs"
+                                            }
+                                        }
+                                    },
+                                    "runAfter":  {
+                                        "Parse_JSON_2":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "Foreach"
+                                },
+                                "HTTP_-_Get_the_related_video_info_for_each_playlist_(Max_50)":  {
+                                    "runAfter":  {
+                                    },
+                                    "type":  "Http",
+                                    "inputs":  {
+                                        "method":  "GET",
+                                        "uri":  "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails\u0026playlistId=@{items('For_each_Playlist')?['id']}\u0026maxResults=50\u0026key=@{variables('APIKEY')}"
+                                    }
+                                },
+                                "Parse_JSON_2":  {
+                                    "runAfter":  {
+                                        "HTTP_-_Get_the_related_video_info_for_each_playlist_(Max_50)":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ParseJson",
+                                    "inputs":  {
+                                        "content":  "@body('HTTP_-_Get_the_related_video_info_for_each_playlist_(Max_50)')",
+                                        "schema":  {
+                                            "properties":  {
+                                                "etag":  {
+                                                    "type":  "string"
+                                                },
+                                                "items":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "contentDetails":  {
+                                                                "properties":  {
+                                                                    "videoId":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "videoPublishedAt":  {
+                                                                        "type":  "string"
+                                                                    }
+                                                                },
+                                                                "type":  "object"
+                                                            },
+                                                            "etag":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "id":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "kind":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "snippet":  {
+                                                                "properties":  {
+                                                                    "channelId":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "channelTitle":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "description":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "playlistId":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "position":  {
+                                                                        "type":  "integer"
+                                                                    },
+                                                                    "publishedAt":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "resourceId":  {
+                                                                        "properties":  {
+                                                                            "kind":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "videoId":  {
+                                                                                "type":  "string"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "thumbnails":  {
+                                                                        "properties":  {
+                                                                            "default":  {
+                                                                                "properties":  {
+                                                                                    "height":  {
+                                                                                        "type":  "integer"
+                                                                                    },
+                                                                                    "url":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    "width":  {
+                                                                                        "type":  "integer"
+                                                                                    }
+                                                                                },
+                                                                                "type":  "object"
+                                                                            },
+                                                                            "high":  {
+                                                                                "properties":  {
+                                                                                    "height":  {
+                                                                                        "type":  "integer"
+                                                                                    },
+                                                                                    "url":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    "width":  {
+                                                                                        "type":  "integer"
+                                                                                    }
+                                                                                },
+                                                                                "type":  "object"
+                                                                            },
+                                                                            "maxres":  {
+                                                                                "properties":  {
+                                                                                    "height":  {
+                                                                                        "type":  "integer"
+                                                                                    },
+                                                                                    "url":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    "width":  {
+                                                                                        "type":  "integer"
+                                                                                    }
+                                                                                },
+                                                                                "type":  "object"
+                                                                            },
+                                                                            "medium":  {
+                                                                                "properties":  {
+                                                                                    "height":  {
+                                                                                        "type":  "integer"
+                                                                                    },
+                                                                                    "url":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    "width":  {
+                                                                                        "type":  "integer"
+                                                                                    }
+                                                                                },
+                                                                                "type":  "object"
+                                                                            },
+                                                                            "standard":  {
+                                                                                "properties":  {
+                                                                                    "height":  {
+                                                                                        "type":  "integer"
+                                                                                    },
+                                                                                    "url":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    "width":  {
+                                                                                        "type":  "integer"
+                                                                                    }
+                                                                                },
+                                                                                "type":  "object"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "title":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "videoOwnerChannelId":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "videoOwnerChannelTitle":  {
+                                                                        "type":  "string"
+                                                                    }
+                                                                },
+                                                                "type":  "object"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "kind",
+                                                            "etag",
+                                                            "id",
+                                                            "snippet",
+                                                            "contentDetails"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "kind":  {
+                                                    "type":  "string"
+                                                },
+                                                "nextPageToken":  {
+                                                    "type":  "string"
+                                                },
+                                                "pageInfo":  {
+                                                    "properties":  {
+                                                        "resultsPerPage":  {
+                                                            "type":  "integer"
+                                                        },
+                                                        "totalResults":  {
+                                                            "type":  "integer"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter":  {
+                                "Parse_JSON":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Foreach"
+                        },
+                        "HTTP_request_to_get_the_playlist_IDs_(Max_50)":  {
+                            "runAfter":  {
+                                "Provide_your_required_Channel_ID":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Http",
+                            "inputs":  {
+                                "method":  "GET",
+                                "uri":  "https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails\u0026channelId=@{variables('CID')}\u0026maxResults=50\u0026key=@{variables('APIKEY')}"
+                            }
+                        },
+                        "Parse_JSON":  {
+                            "runAfter":  {
+                                "HTTP_request_to_get_the_playlist_IDs_(Max_50)":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ParseJson",
+                            "inputs":  {
+                                "content":  "@body('HTTP_request_to_get_the_playlist_IDs_(Max_50)')",
+                                "schema":  {
+                                    "properties":  {
+                                        "etag":  {
+                                            "type":  "string"
+                                        },
+                                        "items":  {
+                                            "items":  {
+                                                "properties":  {
+                                                    "contentDetails":  {
+                                                        "properties":  {
+                                                            "itemCount":  {
+                                                                "type":  "integer"
+                                                            }
+                                                        },
+                                                        "type":  "object"
+                                                    },
+                                                    "etag":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "id":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "kind":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "snippet":  {
+                                                        "properties":  {
+                                                            "channelId":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "channelTitle":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "description":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "localized":  {
+                                                                "properties":  {
+                                                                    "description":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                                    "title":  {
+                                                                        "type":  "string"
+                                                                    }
+                                                                },
+                                                                "type":  "object"
+                                                            },
+                                                            "publishedAt":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "thumbnails":  {
+                                                                "properties":  {
+                                                                    "default":  {
+                                                                        "properties":  {
+                                                                            "height":  {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            "url":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "width":  {
+                                                                                "type":  "integer"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "high":  {
+                                                                        "properties":  {
+                                                                            "height":  {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            "url":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "width":  {
+                                                                                "type":  "integer"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "maxres":  {
+                                                                        "properties":  {
+                                                                            "height":  {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            "url":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "width":  {
+                                                                                "type":  "integer"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "medium":  {
+                                                                        "properties":  {
+                                                                            "height":  {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            "url":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "width":  {
+                                                                                "type":  "integer"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    },
+                                                                    "standard":  {
+                                                                        "properties":  {
+                                                                            "height":  {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            "url":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            "width":  {
+                                                                                "type":  "integer"
+                                                                            }
+                                                                        },
+                                                                        "type":  "object"
+                                                                    }
+                                                                },
+                                                                "type":  "object"
+                                                            },
+                                                            "title":  {
+                                                                "type":  "string"
+                                                            }
+                                                        },
+                                                        "type":  "object"
+                                                    }
+                                                },
+                                                "required":  [
+                                                    "kind",
+                                                    "etag",
+                                                    "id",
+                                                    "snippet",
+                                                    "contentDetails"
+                                                ],
+                                                "type":  "object"
+                                            },
+                                            "type":  "array"
+                                        },
+                                        "kind":  {
+                                            "type":  "string"
+                                        },
+                                        "pageInfo":  {
+                                            "properties":  {
+                                                "resultsPerPage":  {
+                                                    "type":  "integer"
+                                                },
+                                                "totalResults":  {
+                                                    "type":  "integer"
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    },
+                                    "type":  "object"
+                                }
+                            }
+                        },
+                        "Provide_your_required_Channel_ID":  {
+                            "runAfter":  {
+                                "Set_required_YouTube_API_Key":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "CID",
+                                        "type":  "string",
+                                        "value":  "UCt-BveCdfTZb4gZur6vz5NA"
+                                    }
+                                ]
+                            }
+                        },
+                        "Set_required_YouTube_API_Key":  {
+                            "runAfter":  {
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "APIKEY",
+                                        "type":  "string",
+                                        "value":  "AIzaSyD3aJeS-NBIWpzwotG-Nzm1MyStyVcf1PM"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs":  {
+                    }
+                },
+                "parameters":  {
+                    "$connections":  {
+                        "value":  {
+                            "azureloganalyticsdatacollector":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('AzureloganalyticsdatacollectorConnectionName'))]",
+                                "connectionName":  "[variables('AzureloganalyticsdatacollectorConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azureloganalyticsdatacollector')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "name":  "[parameters('PlaybookName')]",
+            "type":  "Microsoft.Logic/workflows",
+            "location":  "[resourceGroup().location]",
+            "tags":  {
+                "hidden-SentinelTemplateName":  "GetYouTubePlaylistVideoIDs",
+                "hidden-SentinelTemplateVersion":  "1.0"
+            },
+            "identity":  {
+                "type":  "SystemAssigned"
+            },
+            "apiVersion":  "2017-07-01",
+            "dependsOn":  [
+                "[resourceId('Microsoft.Web/connections', variables('AzureloganalyticsdatacollectorConnectionName'))]"
+            ]
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('AzureloganalyticsdatacollectorConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('AzureloganalyticsdatacollectorConnectionName')]",
+                "customParameterValues":  {
+                },
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azureloganalyticsdatacollector')]"
+                }
+            }
+        }
+    ]
+}
