@@ -5,12 +5,13 @@ Monitor your YouTube videos using Logic Apps and Azure Monitor.
 
 The following solution uses two Logic Apps to collect YouTube video metrics and comments by leveraging the YouTube API.
 
-How it works:
+## How it works:
 
 YouTube has a [broad set of APIs](https://developers.google.com/youtube/v3/docs). It can be difficult to track overall statistics like views and likes on many videos. It can also be hard to track comments. This solution pulls in the metrics and comments from your playlists for centralized reporting. This can be expanded to monitor abusive comments and viewing trends. You can track your own videos and videos owned by others (if the videos are in one of your playlists). For example, you may be featured in videos published on a channel that you do not own.
 
 Note that most of the video data is publicly available with a legitimate API key. Some datasets and actions are only accessible as the account owner. For example, you can gather views and comments from any video but you cannot delete comments on another channel.
-Setup:
+
+## Setup:
 
 1.	You first need a YouTube account (Google Account).
 2.	Add any videos that you want to track to a playlist.
